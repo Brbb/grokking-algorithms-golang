@@ -77,7 +77,7 @@ func (g *Graph) String() string {
 
 // Dijkstra implements THE Dijkstra algorithm
 // Returns the shortest path from startNode to all the other Nodes
-func (g *Graph) Dijkstra(startNode *Node) (shortestPathTable string) {
+func (g *Graph) Dijkstra(startNode *Node) (costTable map[*Node]int) {
 
 	// First, we instantiate a "Cost Table", it will hold the information:
 	// "From startNode, what's is the cost to all the other Nodes?"
@@ -87,7 +87,7 @@ func (g *Graph) Dijkstra(startNode *Node) (shortestPathTable string) {
 	//  B    Inf   // the distance to all the other Nodes are unknown, so we mark as Infinity
 	//  C    Inf
 	// ...
-	costTable := g.NewCostTable(startNode)
+	costTable = g.NewCostTable(startNode)
 
 	// An empty list of "visited" Nodes. Everytime the algorithm runs on a Node, we add it here
 	var visited []*Node
@@ -121,12 +121,7 @@ func (g *Graph) Dijkstra(startNode *Node) (shortestPathTable string) {
 		}
 	}
 
-	// Make the costTable nice to read :)
-	for node, cost := range costTable {
-		shortestPathTable += fmt.Sprintf("Distance from %s to %s = %d\n", startNode.Name, node.Name, cost)
-	}
-
-	return shortestPathTable
+	return costTable
 }
 
 // NewCostTable returns an initialized cost table for the Dijkstra algorithm work with
@@ -211,7 +206,13 @@ func main() {
 	graph.AddEdge(f, g, 1)
 
 	fmt.Println(graph.String())
-	fmt.Println(graph.Dijkstra(a))
+
+	costTable := graph.Dijkstra(a)
+
+	// Make the costTable nice to read :)
+	for node, cost := range costTable {
+		fmt.Printf("Distance from %s to %s = %d\n", a.Name, node.Name, cost)
+	}
 
 	// Executes exercises from other file
 	exercises()
