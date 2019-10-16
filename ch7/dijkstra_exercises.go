@@ -23,7 +23,10 @@ func exercises() {
 	g71a.AddEdge(c, d, 3)
 	g71a.AddEdge(c, finish, 6)
 	g71a.AddEdge(d, finish, 1)
-	fmt.Println(g71a.Dijkstra(start))
+	costTable := g71a.Dijkstra(start)
+	for node, cost := range costTable {
+		fmt.Printf("Distance from %s to %s = %d\n", a.Name, node.Name, cost)
+	}
 
 	fmt.Println("Exercise 7.1 - B")
 	g71b := Graph{}
@@ -32,7 +35,10 @@ func exercises() {
 	g71b.AddEdge(b, a, 1)
 	g71b.AddEdge(c, b, 1)
 	g71b.AddEdge(c, finish, 30)
-	fmt.Println(g71b.Dijkstra(start))
+	costTable = g71b.Dijkstra(start)
+	for node, cost := range costTable {
+		fmt.Printf("Distance from %s to %s = %d\n", a.Name, node.Name, cost)
+	}
 
 	fmt.Println("Exercise 7.1 - C")
 	fmt.Println("Can't, have negative weighted edges")

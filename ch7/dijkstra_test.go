@@ -23,7 +23,11 @@ func Test_Graph(t *testing.T) {
 			t.Errorf("expected %d, got %d", 4, len(g.Nodes))
 		}
 
-		nodes := []*Node{a, b, c, d}
+		nodes := make(map[*Node]bool)
+		nodes[a] = true
+		nodes[b] = true
+		nodes[c] = true
+		nodes[d] = true
 		if !reflect.DeepEqual(g.Nodes, nodes) {
 			t.Errorf("expected %v, got %v", nodes, g.Nodes)
 		}
@@ -111,15 +115,19 @@ func Test_Graph(t *testing.T) {
 
 	})
 	t.Run("Dijkstra", func(t *testing.T) {
-		shortestPathTable := g.Dijkstra(a)
+		costTable := g.Dijkstra(a)
 
-		expectedTable := `Distance from a to a = 0
-Distance from a to b = 1
-Distance from a to c = 2
-Distance from a to d = 7
-`
-		if shortestPathTable != expectedTable {
-			t.Errorf("expected %s, got %s", expectedTable, shortestPathTable)
+		if costTable[a] != 0 {
+			t.Errorf("expected %d, got %d", 0, costTable[a])
+		}
+		if costTable[b] != 1 {
+			t.Errorf("expected %d, got %d", 1, costTable[b])
+		}
+		if costTable[c] != 2 {
+			t.Errorf("expected %d, got %d", 2, costTable[c])
+		}
+		if costTable[d] != 7 {
+			t.Errorf("expected %d, got %d", 7, costTable[d])
 		}
 	})
 }
