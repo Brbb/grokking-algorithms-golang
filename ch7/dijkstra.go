@@ -8,7 +8,7 @@ import (
 
 type Graph struct {
 	Edges []*Edge
-	Nodes []*Node
+	Nodes map[*Node]bool
 }
 
 type Edge struct {
@@ -37,16 +37,15 @@ func (g *Graph) AddEdge(parent, child *Node, cost int) {
 }
 
 // AddNode adds a Node to the Graph list of Nodes, if the the node wasn't already added
+// g.Nodes is a map for better caching reasons (https://www.reddit.com/r/golang/comments/diptj9/implementing_dijkstra_algorithm_in_go/f3xcffh?utm_source=share&utm_medium=web2x)
 func (g *Graph) AddNode(node *Node) {
-	var isPresent bool
-	for _, n := range g.Nodes {
-		if n == node {
-			isPresent = true
-		}
+	if g.Nodes == nil {
+		g.Nodes = make(map[*Node]bool)
 	}
 
-	if !isPresent {
-		g.Nodes = append(g.Nodes, node)
+	_, ok := g.Nodes[node]
+	if !ok {
+		g.Nodes[node] = true
 	}
 }
 
@@ -62,12 +61,14 @@ func (g *Graph) String() string {
 	s += "\n"
 
 	s += "Nodes: "
-	for i, node := range g.Nodes {
+	i := 0
+	for node, _ := range g.Nodes {
 		if i == len(g.Nodes)-1 {
 			s += node.Name
 		} else {
 			s += node.Name + ", "
 		}
+		i++
 	}
 	s += "\n"
 
@@ -135,7 +136,7 @@ func (g *Graph) NewCostTable(startNode *Node) map[*Node]int {
 	costTable := make(map[*Node]int)
 	costTable[startNode] = 0
 
-	for _, node := range g.Nodes {
+	for node, _ := range g.Nodes {
 		if node != startNode {
 			costTable[node] = Infinity
 		}
