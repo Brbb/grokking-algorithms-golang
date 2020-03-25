@@ -1,15 +1,18 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 )
 
 func getSmallestIndex(s []int) int {
-	smallestIndex := 0
-	smallestItem := s[0]
+	var smallestIndex int
+	var smallestItem int
 
 	for index, item := range s {
+		if index == 0 {
+			smallestIndex = index
+			smallestItem = item
+		}
 		if item < smallestItem {
 			smallestIndex = index
 			smallestItem = item
@@ -48,13 +51,17 @@ func Test_SelectionSort(t *testing.T) {
 			input:    []int{9, 1, 2, 3, 4, 5, 1, 2, 3, 1},
 			expected: []int{1, 1, 1, 2, 2, 3, 3, 4, 5, 9},
 		},
+		{
+			input:    []int{},
+			expected: []int{},
+		},
 	}
 
 	for _, test := range tt {
 		t.Run("", func(t *testing.T) {
 			sorted := selectionSort(test.input)
 
-			if !reflect.DeepEqual(test.expected, sorted) {
+			if !equal(test.expected, sorted) {
 				t.Errorf("expected %v, got %v", test.expected, sorted)
 			}
 
@@ -79,6 +86,10 @@ func Test_FindSmallestIndex(t *testing.T) {
 			input:    []int{0, 9, 8, 7, 6},
 			expected: 0,
 		},
+		{
+			input:    []int{},
+			expected: 0,
+		},
 	}
 
 	for _, test := range tt {
@@ -90,4 +101,16 @@ func Test_FindSmallestIndex(t *testing.T) {
 			}
 		})
 	}
+}
+
+func equal(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
 }
